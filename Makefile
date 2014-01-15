@@ -28,4 +28,4 @@ pylint:
             scripts/repoconf.py | tee pylint.log
 
 pep8:
-	pep8 --config pep8.conf scripts/system-config-repo | tee pep8.log
+	pep8 --config pep8.conf scripts/repoconf.py | tee pep8.log

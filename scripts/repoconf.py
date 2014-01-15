@@ -108,7 +108,8 @@ class Data(object):
             for attr in ['description', 'summary', 'url']:
                 try:
                     cmd = ('rpm -q --qf %%{%s} ' % attr) + pkg
-                    value = subprocess.check_output(cmd.split()).decode('utf-8')
+                    value = \
+                        subprocess.check_output(cmd.split()).decode('utf-8')
                 except (subprocess.CalledProcessError, OSError):
                     value = None
                 setattr(self, attr, value)
@@ -327,7 +328,7 @@ class Handler(object):
             try:
                 link = Gtk.LinkButton(config.get(section, 'gpgkey'))
             except configparser.NoOptionError:
-                link =Gtk.LinkButton('http://not-found')
+                link = Gtk.LinkButton('http://not-found')
                 link.set_sensitive(False)
             link.set_label('Signing key...')
             link.set_alignment(0, 0.5)
