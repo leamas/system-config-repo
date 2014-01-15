@@ -321,13 +321,13 @@ class Handler(object):
             _update_repofile(config, self.repofile, main_window)
             return True
 
-        def get_checkbox(section, label, item):
+        def get_checkbox(section, label, item, enabled=True):
             ''' Return Enabled or Signed checkbox. '''
             box = Gtk.CheckButton()
             box.set_label(label)
             box.set_alignment(0, 0.5)
             box.set_active(config.getboolean(section, item))
-            box.set_sensitive(self.can_update())
+            box.set_sensitive(self.can_update() and enabled)
             box.connect('toggled', on_checkbox_toggled_cb, (section, item))
             return box
 
@@ -364,8 +364,10 @@ class Handler(object):
             if len(config.sections()) > 1:
                 vbox.add(get_label(section))
             vbox.add(get_checkbox(section, 'Enabled', 'enabled'))
-            vbox.add(get_checkbox(section, 'Signed', 'gpgcheck'))
-            vbox.add(get_keylink(section))
+            has_key = config.has_option(section, 'gpgkey')
+            vbox.add(get_checkbox(section, 'Signed', 'gpgcheck', has_key))
+            if has_key:
+                vbox.add(get_keylink(section))
 
     def static_connect(self, builder):
         ''' Connect static signals. '''
