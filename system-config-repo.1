@@ -3,27 +3,37 @@
 system-config-repo \- Yum repository GUI interface
 
 .SH SYNOPSIS
-.B system-config-repo <repo> [repo-id]
+.B system-config-repo <repo> [package]
 .PP
 <repo> is the name of a file in /etc/yum.repos.d which the application
-presents to the user. The optional repo-id is a string used to look up
+presents to the user. The optional package is a string used to look up
 resources under /usr/share/system-config-repo. If omitted, it defaults
 to
 .B vendor-repo
 for a repo like
-.B  vendor.conf
+.B  vendor.repo
 .SH DESCRIPTION
 system-config-repo provides a graphical interface to a single configuration
-file in /etc/yum.repos.d.
-.PP
+file in /etc/yum.repos.d. Using the GUI a user can enable/disable the
+repository, view the package list and inspect the signing key used
+inclusive fingerprint.
+
+.SH DATA SOURCES
 The gui displays gathers data from different sources to provide info
-on the package.
+on the package. In priority it uses:
 .PP
-The description is taken from appdata files name repo-id.appdata.xml.
-The search path is
-/usr/share/repos/appdata:/usr/share/appdata:~/.local/share/appdata.
+Data in the directory /usr/share/system-config-repo/repos/<package>.
+Description, summary etc are represented as files name description.txt,
+summary .txt etc. A file named icon.png is displayed if present.
 .PP
-The icon is searched using similar path.
+The appdata file /usr/share/appdata/<package>.appdata.xml. This file
+contains possibly localized description and summary.
+.PP
+The rpm database provides a non-localized version of summary and
+description.
+.PP
+The path  /usr/share/system-config-repo/Default contains last resort
+default values.
 
 .SH RESTRICTED OPERATION
 An repository file which is writable by current user is updated directly.
@@ -36,12 +46,8 @@ This is open source software under the MIT license, see the LICENSE file.
 
 .SH FILES
 .TP
-/usr/share/repos
+/usr/share/system-config-repo/repos
 Specific resources (icon, summary) for different repo-id.
-.TP
-/usr/share/repos/appdata
-Specific appdata files. The system locations /usr/share/appdata
-are used as fallback.
 .TP
 /etc/sudooers.d/system-config-repo
 Allows members of the wheel group to update repository files.

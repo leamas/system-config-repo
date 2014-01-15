@@ -26,7 +26,5 @@ This is open software licensed under the MIT license, see the LICENSE file.
 
 Lots...
  - Dozens of bugs...
- - Make it work also for unpackaged repos (defaults for description,
-   icon, etc.)
  - Add a File|Open menu item.
  - More examples.
