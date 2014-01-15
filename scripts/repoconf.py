@@ -429,6 +429,8 @@ class Handler(object):
             sys.stderr.write("Cannot parse repository: " + ex + "\n")
             sys.exit(2)
         self.init_window(builder, self.config)
+        builder.get_object('main_window').show_all()
+        builder.get_object('see_link_hbox').hide()
 
 
 def main():
@@ -436,7 +438,6 @@ def main():
     builder = Gtk.Builder()
     builder.add_from_file(here("system-config-repo.ui"))
     builder.connect_signals(Handler(builder))
-    builder.get_object('main_window').show_all()
     Gtk.main()
 
 
