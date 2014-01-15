@@ -220,6 +220,17 @@ class Handler(object):
             _error_dialog(self.builder.get_object('main_window'),
                           "Cannot open %s: %s." % (uri, str(ex)))
             return True
+        keyfile = tempfile.mkstemp()[1]
+        with open(keyfile, 'w') as f:
+             f.write(text)
+        try:
+             metadata = subprocess.check_output(
+                 ['gpg', '--with-fingerprint', keyfile])
+        except subprocess.CalledProcessError:
+             metadata = '(Cannot retrieve metadata uing gpg)'
+        finally:
+            os.unlink(keyfile)
+        text = metadata.decode('utf-8') + "\n" + text
         title = "system-config-repo: " + os.path.basename(uri)
         self.show_some_text(title, text)
 
