@@ -129,18 +129,43 @@ class Data(object):
                 if elem:
                     setattr(self, attr, str(elem[0].text).strip())
 
-    def __init__(self, repo_id, pkg):
+    class _Repodata(object):
+        ''' Wraps data in /usr/share/system-config-repo/repos dir. '''
+        REPOS = '/usr/share/system-config-repo/repos'
+
+        def __init__(self, repo_id):
+            self.repo_id = repo_id
+            for key in ['description', 'summary', 'url']:
+                base = os.path.join(self.REPOS, self.repo_id)
+                key_path = os.path.join(base, key + '.txt')
+                if os.path.exists(key_path):
+                    with open(key_path) as f:
+                        setattr(self, key, f.read().strip())
+
+        @staticmethod
+        def icon(repo_id):
+            ''' Get the icon (only in repodata). '''
+            path = os.path.join(_Repodata.REPOS, self.repo_id, 'icon.png')
+            if os.path.exists(path):
+                return path
+            return os.path.join(_Repodata.REPOS, 'Default', 'icon.png')
+
+
+    def __init__(self, repo_id, repofile, pkg):
+        self.repodata = self._Repodata(repo_id)
         self.pkg_info = self._PkgInfo(pkg)
         self.appdata = self._Appdata(repo_id)
+        self.defaults = self._Repodata('Default')
+        self.repo_id = repo_id
+        self.repofile = repofile
 
     def _get_item(self, item):
         ''' Get a named item (summary, url etc.) from right source. '''
-        if hasattr(self.appdata, item) and getattr(self.appdata, item):
-            return getattr(self.appdata, item)
-        elif hasattr(self.pkg_info, item) and getattr(self.pkg_info, item):
-            return getattr(self.pkg_info, item)
-        else:
-            return None
+        for source in \
+            [self.repodata, self.appdata, self.pkg_info, self.defaults]:
+                if hasattr(source, item) and getattr(source, item):
+                    return getattr(source, item)
+        return None
 
     @property
     def summary(self):
@@ -150,12 +175,21 @@ class Data(object):
     @property
     def description(self):
         ''' Get the description field. '''
-        return re.sub(r'[ \n]+', ' ', self._get_item('description'))
+        descr = self._get_item('description')
+        return re.sub(r'[ \n]+', ' ', descr) if descr else None
 
     @property
     def url(self):
         ''' Get the url field. '''
         return self._get_item('url')
+
+    @property
+    def icon(self):
+        ''' Get the icon (only in repodata). '''
+        path = os.path.join(self._Repodata.REPOS, self.repo_id, 'icon.png')
+        if os.path.exists(path):
+            return path
+        return os.path.join(self._Repodata.REPOS, 'Default', 'icon.png')
 
 
 class Handler(object):
@@ -270,12 +304,7 @@ class Handler(object):
         child = widget.get_child()
         if child:
             widget.remove(child)
-        base_id = self.repo_id.replace('-repo', '')
-        path = os.path.join(here('..'), 'repos', base_id, 'icon.png')
-        if os.path.exists(path):
-            icon = path
-        else:
-            icon = os.path.join(here('..'), 'repos', 'Default', 'icon.png')
+        icon = self.data.icon
         image = Gtk.Image.new_from_file(icon)
         widget.add(image)
 
@@ -285,10 +314,9 @@ class Handler(object):
         def on_summary_activate_cb(widget, data=None):
             ''' User clicked on More.../Less.. link in summary. '''
             see_link_hbox = self.builder.get_object('see_link_hbox')
-            label = self.builder.get_object('summary_lbl')
             if widget.get_label().startswith('Less'):
                 widget.set_label('More...')
-                label.set_text(self.data.summary)
+                label.set_text(summary)
                 see_link_hbox.set_visible(False)
             else:
                 widget.set_label('Less...')
@@ -296,10 +324,18 @@ class Handler(object):
                 see_link_hbox.set_visible(True)
             return True
 
+        label = self.builder.get_object('summary_lbl')
         see_link = self.builder.get_object('see_link')
-        see_link.set_uri(self.data.url)
-        see_link.set_label(self.data.url)
+        if self.data.url:
+            see_link.set_uri(self.data.url)
+            see_link.set_label(self.data.url)
+        else:
+            see_link.hide()
         widget = self.builder.get_object('summary_more_link')
+        if not self.data.description or not self.data.summary:
+            summary = self.repofile + "\n(No data available)"
+        else:
+            summary = self.data.summary
         widget.set_label('Less...')
         on_summary_activate_cb(widget)
         widget.connect('activate-link', on_summary_activate_cb)
@@ -433,7 +469,7 @@ class Handler(object):
         self.builder = builder
         self.static_connect(builder)
         self.repofile, self.repo_id = _parse_commandline()
-        self.data = Data(self.repo_id, self.repo_id)
+        self.data = Data(self.repo_id, self.repofile, self.repo_id)
         try:
             self.config = _parse_repo(self.repofile)
         except configparser.Error as ex:
@@ -442,6 +478,9 @@ class Handler(object):
         self.init_window(builder, self.config)
         builder.get_object('main_window').show_all()
         builder.get_object('see_link_hbox').hide()
+        if not self.data.description:
+            builder.get_object('summary_more_link').hide()
+
 
 
 def main():
