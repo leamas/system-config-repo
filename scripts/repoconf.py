@@ -273,18 +273,15 @@ class Handler(object):
 
         def on_summary_activate_cb(widget, data=None):
             ''' User clicked on More.../Less.. link in summary. '''
-            label = self.builder.get_object('summary_lbl')
             see_link_hbox = self.builder.get_object('see_link_hbox')
-
-            if widget.scr_is_expanded:
+            label = self.builder.get_object('summary_lbl')
+            if widget.get_label().startswith('Less'):
                 widget.set_label('More...')
                 label.set_text(self.data.summary)
-                widget.scr_is_expanded = False
                 see_link_hbox.set_visible(False)
             else:
                 widget.set_label('Less...')
                 label.set_text(self.data.description)
-                widget.scr_is_expanded = True
                 see_link_hbox.set_visible(True)
             return True
 
@@ -292,7 +289,7 @@ class Handler(object):
         see_link.set_uri(self.data.url)
         see_link.set_label(self.data.url)
         widget = self.builder.get_object('summary_more_link')
-        widget.scr_is_expanded = True
+        widget.set_label('Less...')
         on_summary_activate_cb(widget)
         widget.connect('activate-link', on_summary_activate_cb)
 
