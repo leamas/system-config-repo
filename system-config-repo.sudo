@@ -1,0 +1,8 @@
+#
+# system-config-repo config
+#
+
+Cmnd_Alias SCR_COMMANDS = /usr/share/system-config/repo/script/update-repo
+Defaults!SCR_COMMANDS  listpw=never
+
+%wheel ALL = /usr/share/system-config-repo/scripts/update-repo

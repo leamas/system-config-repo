@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Update a yum repository file ($1) by copying $2 onto it. Runs
+# as root, be careful.
+#
+repofile="$1"
+new_repofile="$2"
+exec &> /tmp/update.log
+set -x
+
+if (( $# != 2 )); then
+    echo "Usage: update-repo <repofile> <new_repofile_data>." >&2
+    exit 1
+fi
+
+[ -w "$1" ] || {
+    echo "Cannot open repofile: \"$1\" for write." >&2
+    exit 2
+}
+
+[ -r "$2" ] || {
+    echo "Cannot open repofile data: \"$2\"" >&2
+    exit 2
+}
+
+if [[ "$1" != /etc/yum.repos.d/* ]]; then
+    echo "Illegal repofile: \"$1\""
+    exit 2
+fi
+
+cp "$2" "$1"

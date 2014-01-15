@@ -1,0 +1,56 @@
+.TH system-config-repo 1
+.SH NAME
+system-config-repo \- Yum repository GUI interface
+
+.SH SYNOPSIS
+.B system-config-repo <repo> [repo-id]
+.PP
+<repo> is the name of a file in /etc/yum.repos.d which the application
+presents to the user. The optional repo-id is a string used to look up
+resources under /usr/share/system-config-repo. If omitted, it defaults
+to
+.B vendor-repo
+for a repo like
+.B  vendor.conf
+.SH DESCRIPTION
+system-config-repo provides a graphical interface to a single configuration
+file in /etc/yum.repos.d.
+.PP
+The gui displays gathers data from different sources to provide info
+on the package.
+.PP
+The description is taken from appdata files name repo-id.appdata.xml.
+The search path is
+/usr/share/repos/appdata:/usr/share/appdata:~/.local/share/appdata.
+.PP
+The icon is searched using similar path.
+
+.SH RESTRICTED OPERATION
+An repository file which is writable by current user is updated directly.
+If the repo file is not writeable, an attempt to update it using sudo(8)
+is done. The package installs a sudo config file which allow all members
+of the wheel group to update the repository file.
+
+.SH LICENSE
+This is open source software under the MIT license, see the LICENSE file.
+
+.SH FILES
+.TP
+/usr/share/repos
+Specific resources (icon, summary) for different repo-id.
+.TP
+/usr/share/repos/appdata
+Specific appdata files. The system locations /usr/share/appdata
+are used as fallback.
+.TP
+/etc/sudooers.d/system-config-repo
+Allows members of the wheel group to update repository files.
+
+.SH SEE ALSO
+.TP
+https://github.com/leamas/system-config-repo
+    Source, issue tracker, etc.
+.TP
+yum.conf(5)
+    format for /etc/yum.repos.d files.
+

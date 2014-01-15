@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Alec Leamas <leamas@nowhere.net> -->
+<application>
+   <id type="desktop">dropbox-repo.desktop</id>
+   <licence>CC0</licence>
+   <description>
+       <p>
+        The pgdg-93-fedora repo makes it possible to install the
+        PostgreSQL database packages built by the upstream project.
+       </p>
+   </description>
+   <screenshots>
+       <screenshot type="default" width="1136" height="639">
+https://github.com/leamas/system-config-repo/raw/master/examples/pgdg-93-fedora/screenshot.png
+       </screenshot>
+   </screenshots>
+   <url type="homepage">https://postgresql.org</url>
+   <updatecontact>rpmfusion-developers@lists.rpmfusion.org</updatecontact>
+</application>

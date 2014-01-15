@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Alec Leamas <leamas@nowhere.net> -->
+<application>
+   <id type="desktop">dropbox-repo.desktop</id>
+   <licence>CC0</licence>
+   <description>
+       <p>
+        The dropbox repo makes it possible to install the dropbox client
+        application used when accessing dropbox cloud service.
+       </p>
+       <p>
+         See: https://www.dropbox.com
+       </p>
+   <screenshots>
+       <screenshot type="default" width="640" height="360">
+           https://github.com/leamas/lpf/raw/devel/appdata/main.png
+       </screenshot>
+       <screenshot width="640" height="360">
+           https://github.com/leamas/lpf/raw/devel/appdata/details.png
+       </screenshot>
+   </screenshots>
+   <url type="homepage">https://github.com/leamas/lpf</url>
+   <updatecontact>rpmfusion-developers@lists.rpmfusion.org</updatecontact>
+</application>

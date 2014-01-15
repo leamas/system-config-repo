@@ -1,0 +1,97 @@
+/usr/libexec/repo-adm <repofile> [-e <yes|no>]
+/usr/bin/system-config-repo <repofile> [-a appdata] [-d desktop-file] [-i icon]
+
+system-config-repo is targeted to support basic administration of third
+party yum repositories.  Using s-c-r user can enable/disable the repo,
+get information and inspect if repo is signed.
+
+Information is fetched from appdata file of no such available a desktop
+file. Unless given as options appdata and desktop files are searched
+for using heuristics: my-app.appdata.xml and my-app.desktop.
+
+If the repository file contains several repo definitions, they are
+all disabled/enabled if user changes this value.
+
+Normally, s-c-r is invoked by a desktop file bound a to specific repo.
+
+https://www.dropbox.com/help/246/en
+name=Dropbox Repository
+baseurl=http://linux.dropbox.com/fedora/\$releasever/
+gpgkey=http://linux.dropbox.com/fedora/rpm-public-key.asc
+
+logo: mail sent.
+
+adobe:
+http://linuxdownload.adobe.com/adobe-release/adobe-release-i386-1.0-1.noarch.rpm
+
+no logo!
+
+[adobe-linux-i386]
+name=Adobe Systems Incorporated
+baseurl=http://linuxdownload.adobe.com/linux/i386/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-adobe-linux
+
+gpgkey in package...
+sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-adobe-linux
+
+
+
+chromium
+[fedora-chromium-stable]
+name=Builds of the "stable" tag of the Chromium Web Browser
+baseurl=http://repos.fedorapeople.org/repos/spot/chromium-stable/fedora-$releasever/$basearch/
+enabled=1
+skip_if_unavailable=1
+gpgcheck=0
+
+
+
+google: NA (user accepts EULA before downloading repo reference)
+
+
+
+[opennms-stable-common]
+name=RPMs Common to All OpenNMS Architectures (stable)
+baseurl=http://yum.opennms.org/stable/common
+failovermethod=roundrobin
+gpgcheck=1
+gpgkey=file:///etc/yum.repos.d/OPENNMS-GPG-KEY
+
+[opennms-stable-fc18]
+name=Fedora 18 (stable)
+baseurl=http://yum.opennms.org/stable/fc18
+failovermethod=roundrobin
+gpgcheck=1
+gpgkey=file:///etc/yum.repos.d/OPENNMS-GPG-KEY
+
+
+
+[pgdg93]
+name=PostgreSQL 9.3 $releasever - $basearch
+baseurl=http://yum.postgresql.org/9.3/fedora/fedora-$releasever-$basearch
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-93
+
+[pgdg93-source]
+name=PostgreSQL 9.3 $releasever - $basearch - Source
+failovermethod=priority
+baseurl=http://yum.postgresql.org/srpms/9.3/fedora/fedora-$releasever-$basearch
+enabled=0
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-93
+
+http://wiki.postgresql.org/wiki/Trademark_Policy
+
+
+virtualbox:
+[virtualbox]
+name=Fedora $releasever - $basearch - VirtualBox
+baseurl=http://download.virtualbox.org/virtualbox/rpm/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc
+
+http://commons.wikimedia.org/wiki/File:Virtualbox_logo.png

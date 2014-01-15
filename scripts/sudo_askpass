@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# zenity wrapper used as sudo askpass helper
+
+# http://forums.gentoo.org/viewtopic-t-947210-start-0.html
+export NO_AT_BRIDGE=0
+
+scriptdir=$( dirname $(readlink -fn $0))
+
+zenity --password --title="$*"  || :
+
+
+# vim: set expandtab ts=4 sw=4:

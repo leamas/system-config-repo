@@ -1,0 +1,20 @@
+#/usr/bin/bash
+#
+# system-config repo wrapper: if possible, run as group wheel.
+# Invoke repoconf.main()
+#
+#
+
+if [[ "$( id -gn )" != 'wheel' && "$(id -Gn)" == *wheel* ]]; then
+    sg wheel "$0 $@"
+    exit $?
+fi
+
+here="$(dirname $( readlink -fn $0 ))"
+
+/usr/bin/env PYTHONPATH="$here" python3 - "$@" << EOF
+
+import repoconf
+repoconf.main()
+
+EOF

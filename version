@@ -1,0 +1,6 @@
+# BEWARE: this is sourced both as a python and a bash file.
+
+VERSION="0"
+COMMIT="5f4c653"
+DATE="2014-01-15 01:00:50 +0100"
+

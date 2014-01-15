@@ -1,0 +1,6 @@
+*.swp
+*.swo
+*.log
+tmp
+__pycache__
+dist
