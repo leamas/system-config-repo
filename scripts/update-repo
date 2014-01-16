@@ -3,10 +3,9 @@
 # Update a yum repository file ($1) by copying $2 onto it. Runs
 # as root, be careful.
 #
+
 repofile="$1"
 new_repofile="$2"
-exec &> /tmp/update.log
-set -x
 
 if (( $# != 2 )); then
     echo "Usage: update-repo <repofile> <new_repofile_data>." >&2
