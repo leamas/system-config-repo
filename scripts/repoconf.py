@@ -160,6 +160,9 @@ class Data(object):
             return os.path.join(_Repodata.REPOS, 'Default', 'icon.png')
 
 
+
+
+
     def __init__(self, repo_id, repofile, pkg):
         self.repodata = self._Repodata(repo_id)
         self.pkg_info = self._PkgInfo(pkg)
@@ -202,8 +205,89 @@ class Data(object):
         return os.path.join(self._Repodata.REPOS, 'Default', 'icon.png')
 
 
+class FileChooserWindow(Gtk.Window):
+    '''File chooser dialog for selecting repo file. '''
+
+    def __init__(self):
+         Gtk.Window.__init__(self, title="Open repository file")
+
+    def run(self):
+        ''' Run the dialog, possibly launching new window. '''
+
+        buttons = (
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OPEN, Gtk.ResponseType.OK
+        )
+        dialog = Gtk.FileChooserDialog("Please choose a file",
+                                       self,
+                                       Gtk.FileChooserAction.OPEN,
+                                       buttons)
+        dialog.set_current_folder('/etc/yum.repos.d')
+        filter_repos = Gtk.FileFilter()
+        filter_repos.set_name("Repository files.")
+        filter_repos.add_pattern('*.repo')
+        dialog.add_filter(filter_repos)
+        filter_all = Gtk.FileFilter()
+        filter_all.set_name("All files.")
+        filter_all.add_pattern('*')
+        dialog.add_filter(filter_all)
+        dialog.connect("delete-event", lambda w,d: dialog.destroy())
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            try:
+                subprocess.check_call(['gtk-launch',
+                                       'system-config-repo',
+                                       dialog.get_filename()])
+            except (OSError, subprocess.CalledprocessError):
+                _error_dialog(self.builder.get_object('main_window'),
+                              "Cannot run open command...")
+        dialog.destroy()
+
+
 class Handler(object):
     ''' Init window and handle signals. '''
+
+
+    def can_update(self):
+        ''' Return True if user can update the repository file. '''
+        if os.access(self.repofile, os.W_OK):
+            return True
+        try:
+            with open('/dev/null', 'w') as devnull:
+                subprocess.check_call(['sudo', '-l', here('update-repo')],
+                                      stdout=devnull, stderr=devnull)
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+    def show_some_text(self, title, text):
+        '''  Show some text in a textview. '''
+
+        def cb_on_view_ok_btn_clicked(button, data=None):
+            ''' OK button on view_some_text window. '''
+            button.get_toplevel().hide()
+            return True
+
+        def cb_on_window_delete_event(window, event):
+            ''' Generic window close event. '''
+            window.hide()
+            return True
+        dialog.connect("delete-event", destroy_cb)
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            try:
+                subprocess.check_call(['gtk-launch',
+                                       'system-config-repo',
+                                       dialog.get_filename()])
+            except (OSError, subprocess.CalledprocessError):
+                _error_dialog(self.builder.get_object('main_window'),
+                              "Cannot run open command...")
+        dialog.destroy()
+
+
+class Handler(object):
+    ''' Init window and handle signals. '''
+
 
     def can_update(self):
         ''' Return True if user can update the repository file. '''
@@ -464,6 +548,10 @@ class Handler(object):
             self.builder.get_object('main_window').set_sensitive(False)
             GObject.idle_add(do_manpage)
 
+        def on_file_open_activate_cb(button, data=None):
+            ''' File|Open menu item. '''
+            FileChooserWindow().run()
+            return True
 
         builder.get_object('main_window').connect('delete-event',
                                                   on_delete_cb)
@@ -477,6 +565,9 @@ class Handler(object):
                                                     Gtk.main_quit)
         builder.get_object('manpage_item').connect('activate',
                                                     on_manpage_activate_cb)
+        builder.get_object('open_file_item').connect('activate',
+                                                     on_file_open_activate_cb,
+                                                     'orvar')
 
     def init_window(self, builder, config):
         ''' Initiate window, prepare for an update. '''
@@ -490,7 +581,6 @@ class Handler(object):
 
     def __init__(self, builder):
         self.builder = builder
-        self.static_connect(builder)
         self.repofile, self.repo_id = _parse_commandline()
         self.data = Data(self.repo_id, self.repofile, self.repo_id)
         try:
