@@ -2,6 +2,7 @@
 *.swo
 *.log
 *debuglog.txt
+rpms
 tmp
 __pycache__
 dist

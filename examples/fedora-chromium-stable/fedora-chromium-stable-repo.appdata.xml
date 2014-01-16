@@ -9,6 +9,10 @@
         browser. It's based on builds from the stable branch provided by spot,
         one of the Fedora packagers.
        </p>
+       <p>
+        The application uses system-config-repo to provide a nice,
+        graphical interface to the repository.
+       </p>
    </description>
    <screenshots>
        <screenshot type="default" width="928" height="522">

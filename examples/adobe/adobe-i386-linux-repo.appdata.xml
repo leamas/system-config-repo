@@ -5,8 +5,12 @@
    <licence>CC0</licence>
    <description>
        <p>
-        The adobe repo makes it possible to install Adobe linux
+        The adobe repository makes it possible to install Adobe linux
         software including Acrobat Reader.
+       </p>
+       <p>
+        The application uses system-config-repo to provide a nice,
+        graphical interface to the repository.
        </p>
    </description>
    <screenshots>

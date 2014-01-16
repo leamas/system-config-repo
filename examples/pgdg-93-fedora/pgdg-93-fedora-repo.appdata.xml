@@ -8,6 +8,10 @@
         The pgdg-93-fedora repo makes it possible to install the
         PostgreSQL database packages built by the upstream project.
        </p>
+       <p>
+        The application uses system-config-repo to provide a nice,
+        graphical interface to the repository.
+       </p>
    </description>
    <screenshots>
        <screenshot type="default" width="1136" height="639">

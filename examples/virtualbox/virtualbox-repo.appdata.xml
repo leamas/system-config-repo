@@ -8,6 +8,10 @@
         The virtualbox repo makes it possible to install the virtualbox
         virtual hosting software.
        </p>
+       <p>
+        The application uses system-config-repo to provide a nice,
+        graphical interface to the repository.
+       </p>
    </description>
    <screenshots>
        <screenshot type="default" width="896" height="504">

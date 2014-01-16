@@ -29,3 +29,15 @@ pylint:
 
 pep8:
 	pep8 --config pep8.conf scripts/repoconf.py | tee pep8.log
+
+examples:  PHONY
+	cd examples; \
+	for dir in *; do \
+	    [  $$dir = "rpms" ] && continue; \
+	    cd $$dir; \
+	    rpmbuild -D "_sourcedir $$PWD" -D "_rpmdir ../rpms"  \
+	        --quiet -bb $$dir-*repo.spec ; \
+	    cd ..; \
+	done
+
+PHONY:
