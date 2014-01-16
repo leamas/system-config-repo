@@ -13,12 +13,14 @@ relative to /etc/yum.repos.d.
 $ system-config-repo fedora.repo
 .PP
 Displays info on the Fedora release repositories.
+
 .SH DESCRIPTION
 system-config-repo provides a graphical interface to a single configuration
 file in /etc/yum.repos.d. Using the GUI a user can enable/disable the
 repository, view the package list and inspect the signing key used
 inclusive fingerprint.
-.PP
+
+.SH DATA SOURCES
 To gather more info, application checks if the <repo> file is part of a
 package. That package name is used as <package> in the following. If the
 repo file is not owned by a package, <package> defaults to <basename>-repo
@@ -26,8 +28,7 @@ i. e., a repofile like
 .B vendor.repo
 defaults to a <package> named
 .B vendor-repo.
-
-.SH DATA SOURCES
+.PP
 The gui gathers data from different sources to provide info on the package.
 In priority it uses:
 .IP \(bu 3
