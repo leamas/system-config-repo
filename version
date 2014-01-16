@@ -1,6 +1,6 @@
 # BEWARE: this is sourced both as a python and a bash file.
+# Furthermore, it's handled by git smudge/clean filters on checkin/checkout.
 
 VERSION="0"
 COMMIT="@commit@"
 DATE="@date@"
-
