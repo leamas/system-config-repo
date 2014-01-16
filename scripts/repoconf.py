@@ -57,7 +57,7 @@ def _parse_repo(repofile):
 
 def _parse_commandline():
     ''' Parse commandline, return (repofile, repo_id). '''
-    if not (1 < len(sys.argv) < 4):
+    if not (1 < len(sys.argv) < 3):
         sys.stderr.write(USAGE)
         sys.exit(1)
     repofile = sys.argv[1]
@@ -66,9 +66,10 @@ def _parse_commandline():
     if not os.access(repofile, os.R_OK):
         sys.stderr.write("Cannot open : " + repofile + "\n")
         sys.exit(1)
-    if len(sys.argv) == 3:
-        repo_id = sys.argv[1]
-    else:
+    try:
+        reply = subprocess.check_output(['rpm', '-qf', repofile])
+        repo_id = reply.decode('utf-8').rsplit('-', 2)[0]
+    except subprocess.CalledProcessError:
         try:
             basename = os.path.basename(repofile).split('.', 1)[0]
         except (ValueError, IndexError):
@@ -186,7 +187,8 @@ class Data(object):
     @property
     def icon(self):
         ''' Get the icon (only in repodata). '''
-        path = os.path.join(self._Repodata.REPOS, self.repo_id, 'icon.png')
+        key = re.sub('-repo$', '', self.repo_id)
+        path = os.path.join(self._Repodata.REPOS, key, 'icon.png')
         if os.path.exists(path):
             return path
         return os.path.join(self._Repodata.REPOS, 'Default', 'icon.png')
