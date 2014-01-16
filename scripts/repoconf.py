@@ -28,7 +28,12 @@ import version
 VERSION = "Version: %s ( %s %s )" % (
     version.VERSION, version.COMMIT, version.DATE.split()[0])
 
-USAGE = 'Usage: system-config-repo <repofile> [repo-id]\n'
+USAGE = \
+'''Usage: system-config-repo <repofile>
+
+<repofile> is a path to a yum repository file. If not absolute interpreted
+as relative to /etc/yum.repos.d/. See manpage system-config-repo(1) for more.
+'''
 
 
 def here(path):
@@ -60,6 +65,9 @@ def _parse_commandline():
     if not (1 < len(sys.argv) < 3):
         sys.stderr.write(USAGE)
         sys.exit(1)
+    if sys.argv[1] in ['-h', '--help']:
+        sys.stderr.write(USAGE)
+        sys.exit(0)
     repofile = sys.argv[1]
     if not os.access(repofile, os.R_OK):
         repofile = os.path.join('/etc/yum.repos.d', repofile)
