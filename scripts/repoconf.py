@@ -364,7 +364,10 @@ class Handler(object):
             box = Gtk.CheckButton()
             box.set_label(label)
             box.set_alignment(0, 0.5)
-            box.set_active(config.getboolean(section, item))
+            try:
+                box.set_active(config.getboolean(section, item))
+            except configparser.NoOptionError:
+                box.set_active(False)
             box.set_sensitive(self.can_update() and enabled)
             box.connect('toggled', on_checkbox_toggled_cb, (section, item))
             return box
@@ -385,7 +388,13 @@ class Handler(object):
         def get_label(section):
             ''' Return the initial label for every repo in file. '''
             label = Gtk.Label()
-            label.set_text(section)
+            if config.has_option(section, 'name'):
+                text = config.get(section, 'name')
+            elif config.has_option(section, 'description'):
+                text =  section + ': ' + config.get(section, 'description')
+            else:
+                text = section
+            label.set_text(text)
             label.set_alignment(0, 0.5)
             return label
 
@@ -399,11 +408,14 @@ class Handler(object):
             vbox = Gtk.VBox()
             top_vbox.add(vbox)
             vbox.add(Gtk.HSeparator())
-            if len(config.sections()) > 1:
+            if len(config.sections()) > 1 or config.has_option(section,
+                                                               'description'):
                 vbox.add(get_label(section))
             vbox.add(get_checkbox(section, 'Enabled', 'enabled'))
             has_key = config.has_option(section, 'gpgkey')
             vbox.add(get_checkbox(section, 'Signed', 'gpgcheck', has_key))
+            vbox.add(get_checkbox(
+                section,'Skip if unavailable', 'skip_if_unavailable'))
             if has_key:
                 vbox.add(get_keylink(section))
 
@@ -429,7 +441,7 @@ class Handler(object):
             ''' User pushes 'List packages' button. '''
             self.show_packagelist()
 
-        def on_manpage_clicked_cb(button, data=None):
+        def on_manpage_activate_cb(button, data=None):
             ''' Display manpage... '''
 
             def do_manpage():
@@ -444,6 +456,7 @@ class Handler(object):
             self.builder.get_object('main_window').set_sensitive(False)
             GObject.idle_add(do_manpage)
 
+
         builder.get_object('main_window').connect('delete-event',
                                                   on_delete_cb)
         builder.get_object('main_ok_btn').connect('clicked',
@@ -455,7 +468,7 @@ class Handler(object):
         builder.get_object('quit_menuitem').connect('activate',
                                                     Gtk.main_quit)
         builder.get_object('manpage_item').connect('activate',
-                                                    on_manpage_clicked_cb)
+                                                    on_manpage_activate_cb)
 
     def init_window(self, builder, config):
         ''' Initiate window, prepare for an update. '''
