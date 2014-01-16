@@ -553,21 +553,17 @@ class Handler(object):
             FileChooserWindow().run()
             return True
 
-        builder.get_object('main_window').connect('delete-event',
-                                                  on_delete_cb)
-        builder.get_object('main_ok_btn').connect('clicked',
-                                                  Gtk.main_quit)
-        builder.get_object('main_view_btn').connect('clicked',
-                                                    on_view_repo_clicked_cb)
-        builder.get_object('main_list_btn').connect('clicked',
-                                                    on_main_list_clicked_cb)
-        builder.get_object('quit_menuitem').connect('activate',
-                                                    Gtk.main_quit)
-        builder.get_object('manpage_item').connect('activate',
-                                                    on_manpage_activate_cb)
-        builder.get_object('open_file_item').connect('activate',
-                                                     on_file_open_activate_cb,
-                                                     'orvar')
+        connections = [
+           ('main_window', 'delete-event', on_delete_cb),
+           ('main_ok_btn', 'clicked', Gtk.main_quit),
+           ('main_view_btn','clicked',on_view_repo_clicked_cb),
+           ('main_list_btn','clicked', on_main_list_clicked_cb),
+           ('quit_menuitem', 'activate', Gtk.main_quit),
+           ('manpage_item', 'activate', on_manpage_activate_cb),
+           ('open_file_item', 'activate', on_file_open_activate_cb)
+        ]
+        for (widget, signal, callback) in connections:
+            builder.get_object(widget).connect(signal, callback)
 
     def init_window(self, builder, config):
         ''' Initiate window, prepare for an update. '''
