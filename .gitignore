@@ -1,6 +1,7 @@
 *.swp
 *.swo
 *.log
+*debuglog.txt
 tmp
 __pycache__
 dist
