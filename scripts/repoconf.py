@@ -151,18 +151,6 @@ class Data(object):
                     with open(key_path) as f:
                         setattr(self, key, f.read().strip())
 
-        @staticmethod
-        def icon(repo_id):
-            ''' Get the icon (only in repodata). '''
-            path = os.path.join(_Repodata.REPOS, self.repo_id, 'icon.png')
-            if os.path.exists(path):
-                return path
-            return os.path.join(_Repodata.REPOS, 'Default', 'icon.png')
-
-
-
-
-
     def __init__(self, repo_id, repofile, pkg):
         self.repodata = self._Repodata(repo_id)
         self.pkg_info = self._PkgInfo(pkg)
@@ -174,9 +162,9 @@ class Data(object):
     def _get_item(self, item):
         ''' Get a named item (summary, url etc.) from right source. '''
         for source in \
-            [self.repodata, self.appdata, self.pkg_info, self.defaults]:
-                if hasattr(source, item) and getattr(source, item):
-                    return getattr(source, item)
+        [self.repodata, self.appdata, self.pkg_info, self.defaults]:
+            if hasattr(source, item) and getattr(source, item):
+                return getattr(source, item)
         return None
 
     @property
@@ -208,8 +196,9 @@ class Data(object):
 class FileChooserWindow(Gtk.Window):
     '''File chooser dialog for selecting repo file. '''
 
-    def __init__(self):
-         Gtk.Window.__init__(self, title="Open repository file")
+    def __init__(self, main_window):
+        Gtk.Window.__init__(self, title="Open repository file")
+        self.main_window = main_window
 
     def run(self):
         ''' Run the dialog, possibly launching new window. '''
@@ -231,56 +220,15 @@ class FileChooserWindow(Gtk.Window):
         filter_all.set_name("All files.")
         filter_all.add_pattern('*')
         dialog.add_filter(filter_all)
-        dialog.connect("delete-event", lambda w,d: dialog.destroy())
+        dialog.connect("delete-event", lambda w, d: dialog.destroy())
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             try:
                 subprocess.check_call(['gtk-launch',
                                        'system-config-repo',
                                        dialog.get_filename()])
-            except (OSError, subprocess.CalledprocessError):
-                _error_dialog(self.builder.get_object('main_window'),
-                              "Cannot run open command...")
-        dialog.destroy()
-
-
-class Handler(object):
-    ''' Init window and handle signals. '''
-
-
-    def can_update(self):
-        ''' Return True if user can update the repository file. '''
-        if os.access(self.repofile, os.W_OK):
-            return True
-        try:
-            with open('/dev/null', 'w') as devnull:
-                subprocess.check_call(['sudo', '-l', here('update-repo')],
-                                      stdout=devnull, stderr=devnull)
-            return True
-        except subprocess.CalledProcessError:
-            return False
-
-    def show_some_text(self, title, text):
-        '''  Show some text in a textview. '''
-
-        def cb_on_view_ok_btn_clicked(button, data=None):
-            ''' OK button on view_some_text window. '''
-            button.get_toplevel().hide()
-            return True
-
-        def cb_on_window_delete_event(window, event):
-            ''' Generic window close event. '''
-            window.hide()
-            return True
-        dialog.connect("delete-event", destroy_cb)
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            try:
-                subprocess.check_call(['gtk-launch',
-                                       'system-config-repo',
-                                       dialog.get_filename()])
-            except (OSError, subprocess.CalledprocessError):
-                _error_dialog(self.builder.get_object('main_window'),
+            except (OSError, subprocess.CalledProcessError):
+                _error_dialog(self.main_window,
                               "Cannot run open command...")
         dialog.destroy()
 
@@ -333,7 +281,7 @@ class Handler(object):
             with open(repofile) as f:
                 text = f.read()
         except OSError:
-            _error_dialog(self.builder.get_object('main_window'),
+            _error_dialog(self.main_window,
                           "Cannot open repofile: " + repofile)
             return None
         title = "system-config-repo: " + os.path.basename(repofile)
@@ -345,20 +293,20 @@ class Handler(object):
             socket = urlopen(uri)
             text = socket.read().decode('utf-8')
         except IOError as ex:
-            _error_dialog(self.builder.get_object('main_window'),
+            _error_dialog(self.main_window,
                           "Cannot open %s: %s." % (uri, str(ex)))
             return True
         keyfile = tempfile.mkstemp()[1]
         with open(keyfile, 'w') as f:
-             f.write(text)
+            f.write(text)
         try:
-             metadata = subprocess.check_output(
-                 ['gpg', '--with-fingerprint', keyfile])
+            metadata = subprocess.check_output(
+                 ['gpg', '--with-fingerprint', keyfile]).decode('utf-8')
         except subprocess.CalledProcessError:
-             metadata = '(Cannot retrieve metadata uing gpg)'
+            metadata = '(Cannot retrieve metadata uing gpg)'
         finally:
             os.unlink(keyfile)
-        text = metadata.decode('utf-8') + "\n" + text
+        text = metadata + "\n" + text
         title = "system-config-repo: " + os.path.basename(uri)
         self.show_some_text(title, text)
 
@@ -370,7 +318,7 @@ class Handler(object):
         try:
             pkglist = subprocess.check_output(cmd.split()).decode('utf-8')
         except subprocess.CalledProcessError as ex:
-            _error_dialog(self.builder.get_object('main_window'),
+            _error_dialog(self.main_window,
                           "Cannot retrieve package list: " + str(ex))
             return True
         title = 'system-config-repo: Package list'
@@ -447,8 +395,7 @@ class Handler(object):
             (section, item) = data
             value = '1' if widget.get_active() else '0'
             config.set(section, item, value)
-            main_window = self.builder.get_object('main_window')
-            _update_repofile(config, self.repofile, main_window)
+            _update_repofile(config, self.repofile, self.main_window)
             return True
 
         def get_checkbox(section, label, item, enabled=True):
@@ -550,7 +497,7 @@ class Handler(object):
 
         def on_file_open_activate_cb(button, data=None):
             ''' File|Open menu item. '''
-            FileChooserWindow().run()
+            FileChooserWindow(self.main_window).run()
             return True
 
         connections = [
@@ -577,6 +524,7 @@ class Handler(object):
 
     def __init__(self, builder):
         self.builder = builder
+        self.main_window = builder.get_object('main_window')
         self.repofile, self.repo_id = _parse_commandline()
         self.data = Data(self.repo_id, self.repofile, self.repo_id)
         try:
