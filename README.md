@@ -3,7 +3,8 @@ system-config-repo README.
 
 This is a small GUI tool aimed to simplify packaging 3-rd party yum
 repositories. It's basically just a dead simple view where users
-can enable/disable, view the source file and list the packages.
+can enable/disable, view the source file and list the packages in
+a repository file usually found in /etc/yum.repos.d
 
 In the examples directory are a number of packaged repos. The packaging
 includes both desktop files and gnome appdata. Thus a repo packaged this
@@ -13,11 +14,13 @@ way will be found by the standard tools:
   - The packaging utils (yum, dnf, etc.) will find the package.
   - Gnome software is able to find the package and show a screenshot.
 
+Besides handling packaged repos, the tool is designed to handle any
+repository file in a consistent way.
+
 ## Security, users and such
 
-The tool allows users to update the file if they have write access to the
-/etc/yum.repos.d/ file or is member of the wheel group. See manpage
-for more.
+The tool allows user to update the file if she has write access to the
+repository file or is member of the wheel group. See manpage for more.
 
 ## License
 This is open software licensed under the MIT license, see the LICENSE file.
@@ -26,5 +29,4 @@ This is open software licensed under the MIT license, see the LICENSE file.
 
 Lots...
  - Dozens of bugs...
- - Add a File|Open menu item.
  - More examples.
