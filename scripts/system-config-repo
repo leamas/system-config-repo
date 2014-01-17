@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/usr/bin/bash
 #
 # system-config repo wrapper: if possible, run as group wheel.
 # Invoke repoconf.main()

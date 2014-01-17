@@ -23,8 +23,8 @@ cp version $( rpm --eval %_sourcedir )
 tools/disable-version-filter
 
 head=$( git rev-parse HEAD )
-sed -i -e '/%global commit/s/commit.*/commit '$head/ \
-       -e '/%changelog/,/^$/ s/[0-9a-f]{7}/'"${head:0:7}/" \
+sed -ri -e '/%global commit/s/commit.*/commit '$head/ \
+        -e '/%changelog/,/^$/ s/[0-9a-f]{7}/'"${head:0:7}/" \
      system-config-repo.spec
 evr=$( rpm --specfile -q --qf "%{VERSION}-%{RELEASE}" system-config-repo.spec )
 read tag tarball < <(spectool -l system-config-repo.spec)

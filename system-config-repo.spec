@@ -16,6 +16,7 @@ Source1:        version
 BuildArch:      noarch
 
 Buildrequires:  python3-devel
+BuildRequires:  desktop-file-utils
 Requires:       hicolor-icon-theme
 
 
@@ -40,6 +41,8 @@ cp %{SOURCE1} version
 
 %install
 make DESTDIR=%{buildroot} install
+desktop-file-validate \
+    %{buildroot}%{_datadir}/applications/system-config-repo.desktop
 
 
 %post
