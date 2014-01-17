@@ -19,12 +19,13 @@ Requires:       hicolor-icon-theme
 
 %description
 system-config-repo provides a graphical interface to a single yum repository
-file in /etc/yum.repos.d. Using the GUI user can inspect and modif whether
-the repository is enabled and/or signed. It's aslo possible to see the
-underlyng file.
+file in /etc/yum.repos.d. Using the GUI user can inspect and modify whether
+the repository is enabled and/or signed. It's also possible to see the
+underlying file.
 
 Application is primarely intended as a GUI for packaged 3rd-party
-repositories.
+repositories but is designed to work in a consistent way for any
+repository file.
 
 
 %prep
