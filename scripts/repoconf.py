@@ -56,12 +56,17 @@ def _error_dialog(parent_window, message):
 def _parse_repo(repofile):
     ''' Return the parsed repo data. '''
     config = configparser.ConfigParser()
-    config.read(repofile)
+    try:
+        config.read(repofile)
+    except configparser.MissingSectionHeaderError as ex:
+        raise ValueError(str(ex))
     return config
 
 
 def _parse_commandline():
     ''' Parse commandline, return (repofile, repo_id). '''
+    if len(sys.argv) == 1:
+        return None, None
     if not (1 < len(sys.argv) < 3):
         sys.stderr.write(USAGE)
         sys.exit(1)
@@ -72,8 +77,7 @@ def _parse_commandline():
     if not os.access(repofile, os.R_OK):
         repofile = os.path.join('/etc/yum.repos.d', repofile)
     if not os.access(repofile, os.R_OK):
-        sys.stderr.write("Cannot open : " + repofile + "\n")
-        sys.exit(1)
+        raise OSError("Cannot open : " + repofile + "\n")
     try:
         reply = subprocess.check_output(['rpm', '-qf', repofile])
         repo_id = reply.decode('utf-8').rsplit('-', 2)[0]
@@ -81,8 +85,7 @@ def _parse_commandline():
         try:
             basename = os.path.basename(repofile).split('.', 1)[0]
         except (ValueError, IndexError):
-            sys.stderr.write("Bad filename: " + repofile + "\n")
-            sys.exit(1)
+            raise OSError("Bad filename: " + repofile + "\n")
         repo_id = basename + '-repo'
     return repofile, repo_id
 
@@ -525,12 +528,20 @@ class Handler(object):
     def __init__(self, builder):
         self.builder = builder
         self.main_window = builder.get_object('main_window')
-        self.repofile, self.repo_id = _parse_commandline()
+        try:
+            self.repofile, self.repo_id = _parse_commandline()
+        except OSError as ex:
+            _error_dialog(self.main_window, str(ex))
+            sys.exit(1)
+        if not self.repofile:
+            FileChooserWindow(self.main_window).run()
+            sys.exit(0)
         self.data = Data(self.repo_id, self.repofile, self.repo_id)
         try:
             self.config = _parse_repo(self.repofile)
-        except configparser.Error as ex:
-            sys.stderr.write("Cannot parse repository: " + ex + "\n")
+        except (configparser.Error, ValueError) as ex:
+            _error_dialog(self.main_window,
+                          "Cannot parse repository: " + str(ex) + "\n")
             sys.exit(2)
         self.init_window(builder, self.config)
         builder.get_object('main_window').show_all()
