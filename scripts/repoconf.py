@@ -28,8 +28,8 @@ import version
 VERSION = "Version: %s ( %s %s )" % (
     version.VERSION, version.COMMIT, version.DATE.split()[0])
 
-USAGE = \
-'''Usage: system-config-repo <repofile>
+USAGE = '''
+Usage: system-config-repo <repofile>
 
 <repofile> is a path to a yum repository file. If not absolute interpreted
 as relative to /etc/yum.repos.d/. See manpage system-config-repo(1) for more.
@@ -55,7 +55,7 @@ def _error_dialog(parent_window, message):
 
 def _parse_repo(repofile):
     ''' Return the parsed repo data. '''
-    config = RepoConfigParser()
+    config = _RepoConfigParser()
     try:
         config.read(repofile)
     except configparser.MissingSectionHeaderError as ex:
@@ -109,7 +109,10 @@ def _update_repofile(config, path, main_window):
     finally:
         os.unlink(tmpfile)
 
-class RepoConfigParser(configparser.RawConfigParser):
+
+# pylint: disable=too-many-public-methods
+# - http://www.logilab.org/ticket/116963
+class _RepoConfigParser(configparser.RawConfigParser):
     ''' Add interpolating of $releasever and $basearch. '''
 
     def __init__(self):
@@ -125,8 +128,10 @@ class RepoConfigParser(configparser.RawConfigParser):
         value = value.replace('$releasever', self.release)
         return value.replace('$basearch', self.arch)
 
+# pylint: enable=too-many-public-methods
 
-class Data(object):
+
+class _Data(object):
     ''' Wrapper fo all data sources: appdata, package info, etc. '''
 
     class _PkgInfo(object):
@@ -181,9 +186,9 @@ class Data(object):
     def _get_item(self, item):
         ''' Get a named item (summary, url etc.) from right source. '''
         for source in \
-        [self.repodata, self.appdata, self.pkg_info, self.defaults]:
-            if hasattr(source, item) and getattr(source, item):
-                return getattr(source, item)
+            [self.repodata, self.appdata, self.pkg_info, self.defaults]:
+                if hasattr(source, item) and getattr(source, item):
+                    return getattr(source, item)
         return None
 
     @property
@@ -212,7 +217,7 @@ class Data(object):
         return os.path.join(self._Repodata.REPOS, 'Default', 'icon.png')
 
 
-class FileChooserWindow(Gtk.Window):
+class _FileChooserWindow(Gtk.Window):
     '''File chooser dialog for selecting repo file. '''
 
     def __init__(self, main_window):
@@ -254,7 +259,6 @@ class FileChooserWindow(Gtk.Window):
 
 class Handler(object):
     ''' Init window and handle signals. '''
-
 
     def can_update(self):
         ''' Return True if user can update the repository file. '''
@@ -320,7 +324,7 @@ class Handler(object):
             f.write(text)
         try:
             metadata = subprocess.check_output(
-                 ['gpg', '--with-fingerprint', keyfile]).decode('utf-8')
+                ['gpg', '--with-fingerprint', keyfile]).decode('utf-8')
         except subprocess.CalledProcessError:
             metadata = '(Cannot retrieve metadata uing gpg)'
         finally:
@@ -449,7 +453,7 @@ class Handler(object):
             if config.has_option(section, 'name'):
                 text = config.get(section, 'name')
             elif config.has_option(section, 'description'):
-                text =  section + ': ' + config.get(section, 'description')
+                text = section + ': ' + config.get(section, 'description')
             else:
                 text = section
             label.set_text(text)
@@ -473,7 +477,7 @@ class Handler(object):
             has_key = config.has_option(section, 'gpgkey')
             vbox.add(get_checkbox(section, 'Signed', 'gpgcheck', has_key))
             vbox.add(get_checkbox(
-                section,'Skip if unavailable', 'skip_if_unavailable'))
+                section, 'Skip if unavailable', 'skip_if_unavailable'))
             if has_key:
                 vbox.add(get_keylink(section))
 
@@ -516,17 +520,17 @@ class Handler(object):
 
         def on_file_open_activate_cb(button, data=None):
             ''' File|Open menu item. '''
-            FileChooserWindow(self.main_window).run()
+            _FileChooserWindow(self.main_window).run()
             return True
 
         connections = [
-           ('main_window', 'delete-event', on_delete_cb),
-           ('main_ok_btn', 'clicked', Gtk.main_quit),
-           ('main_view_btn','clicked',on_view_repo_clicked_cb),
-           ('main_list_btn','clicked', on_main_list_clicked_cb),
-           ('quit_menuitem', 'activate', Gtk.main_quit),
-           ('manpage_item', 'activate', on_manpage_activate_cb),
-           ('open_file_item', 'activate', on_file_open_activate_cb)
+            ('main_window', 'delete-event', on_delete_cb),
+            ('main_ok_btn', 'clicked', Gtk.main_quit),
+            ('main_view_btn', 'clicked', on_view_repo_clicked_cb),
+            ('main_list_btn', 'clicked', on_main_list_clicked_cb),
+            ('quit_menuitem', 'activate', Gtk.main_quit),
+            ('manpage_item', 'activate', on_manpage_activate_cb),
+            ('open_file_item', 'activate', on_file_open_activate_cb)
         ]
         for (widget, signal, callback) in connections:
             builder.get_object(widget).connect(signal, callback)
@@ -550,9 +554,9 @@ class Handler(object):
             _error_dialog(self.main_window, str(ex))
             sys.exit(1)
         if not self.repofile:
-            FileChooserWindow(self.main_window).run()
+            _FileChooserWindow(self.main_window).run()
             sys.exit(0)
-        self.data = Data(self.repo_id, self.repofile, self.repo_id)
+        self.data = _Data(self.repo_id, self.repofile, self.repo_id)
         try:
             self.config = _parse_repo(self.repofile)
         except (configparser.Error, ValueError) as ex:
@@ -564,7 +568,6 @@ class Handler(object):
         builder.get_object('see_link_hbox').hide()
         if not self.data.description:
             builder.get_object('summary_more_link').hide()
-
 
 
 def main():
