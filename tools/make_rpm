@@ -12,9 +12,15 @@ cd $(dirname $(readlink -fn $0))/..
 
 set -x
 
-tools/fix-git-setup
+mkdir dist 2>/dev/null || :
+rm -rf dist/*
+
+tools/enable-version-filter
 rm version
 git checkout version
+cp version dist
+cp version $( rpm --eval %_sourcedir )
+tools/disable-version-filter
 
 head=$( git rev-parse HEAD )
 sed -i -e '/%global commit/s/commit.*/commit '$head/ \
@@ -27,10 +33,10 @@ git archive -o $(rpm --eval %_sourcedir)/$(basename $tarball) \
 
 rpmbuild -ba system-config-repo.spec
 
-mkdir dist 2>/dev/null || :
-rm -rf dist/*
 cp system-config-repo.spec dist
 cp $(rpm --eval %_srcrpmdir)/system-config-repo-$evr.src.rpm dist
 cp $(rpm --eval %_rpmdir)/noarch/system-config-repo-$evr.noarch.rpm dist
 cp  $(rpm --eval %_sourcedir)/$(basename $tarball) dist
+
 git checkout system-config-repo.spec
+tools/enable-version-filter

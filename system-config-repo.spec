@@ -11,6 +11,8 @@ License:        MIT
 URL:            https://github.com/leamas/system-config-repo
 Group:          Development/System
 Source0:        %{url}/archive/%{commit}/%{name}-0-%{shortcommit}.tar.gz
+                # Created by tools/make_rpm, left in dist directory
+Source1:        version
 BuildArch:      noarch
 
 Buildrequires:  python3-devel
@@ -30,6 +32,7 @@ repository file.
 
 %prep
 %setup -qn %{name}-%{commit}
+cp %{SOURCE1} version
 
 
 %build

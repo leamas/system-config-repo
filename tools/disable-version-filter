@@ -1,0 +1,7 @@
+#/bin/bash
+#
+# Setup some version filtering.
+#
+
+git config --local filter.fix_version.smudge /usr/bin/cat
+git config --local filter.fix_version.clean /usr/bin/cat
