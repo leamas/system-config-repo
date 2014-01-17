@@ -55,7 +55,7 @@ def _error_dialog(parent_window, message):
 
 def _parse_repo(repofile):
     ''' Return the parsed repo data. '''
-    config = configparser.ConfigParser()
+    config = RepoConfigParser()
     try:
         config.read(repofile)
     except configparser.MissingSectionHeaderError as ex:
@@ -108,6 +108,22 @@ def _update_repofile(config, path, main_window):
         _error_dialog(main_window, 'Cannot update repo file: ' + str(ex))
     finally:
         os.unlink(tmpfile)
+
+class RepoConfigParser(configparser.RawConfigParser):
+    ''' Add interpolating of $releasever and $basearch. '''
+
+    def __init__(self):
+        configparser.RawConfigParser.__init__(self)
+        bytes_ = subprocess.check_output(['lsb_release', '-sr'])
+        self.release = bytes_.decode('utf-8').strip()
+        bytes_ = subprocess.check_output(['uname', '-i'])
+        self.arch = bytes_.decode('utf-8').strip()
+
+    # pylint: disable=unused-argument
+    def get(self, section, key, **kwargs):
+        value = str(configparser.RawConfigParser.get(self, section, key))
+        value = value.replace('$releasever', self.release)
+        return value.replace('$basearch', self.arch)
 
 
 class Data(object):
