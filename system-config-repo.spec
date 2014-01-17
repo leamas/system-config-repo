@@ -38,10 +38,21 @@ repositories.
 make DESTDIR=%{buildroot} install
 
 
+%post
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
+
+%postun
+/usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
+
+
 %files
 %doc README.md LICENSE
 %{_bindir}/system-config-repo
 %{_datadir}/system-config-repo
+%{_datadir}/mime/packages/x-yum-repositories.xml
+%{_datadir}/applications/system-config-repo.desktop
 %{_mandir}/man1/system-config-repo*
 %attr(440,-,-) %config(noreplace) /etc/sudoers.d/system-config-repo
 

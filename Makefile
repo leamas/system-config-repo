@@ -15,6 +15,10 @@ install:
 
 	install -pDm 440 system-config-repo.sudo  \
 	    $(DESTDIR)/etc/sudoers.d/system-config-repo
+	install -pDm 644 x-yum-repositories.xml \
+	    $(DESTDIR)$(DATADIR)/mime/packages/x-yum-repositories.xml
+	install -pDm 644 system-config-repo.desktop \
+	    $(DESTDIR)$(DATADIR)/applications/system-config-repo.desktop
 	cp -ar scripts  $(DESTDIR)$(DATADIR)/system-config-repo
 	cp -r repos/Default $(DESTDIR)$(DATADIR)/system-config-repo/repos
 	ln -s $(DATADIR)/system-config-repo/scripts/system-config-repo  \
