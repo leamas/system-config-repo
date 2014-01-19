@@ -18,6 +18,8 @@ Source4:        README
 Source5:        icons.tar
 BuildArch:      noarch
 
+Provides:       repo-gui = 1.0
+
 BuildRequires:  desktop-file-utils
 
 Requires:       fedora-release

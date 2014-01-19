@@ -1,7 +1,7 @@
 %define         reponame %(b=%{name}; echo ${b%%-repo})
 %define         hicolor_dir  %{buildroot}/usr/share/icons/hicolor
 
-Name:           pgdg-93-fedora-repo
+Name:           postgres-93-repo
 Version:        0
 Release:        1%{?dist}
 Summary:        3rd-party PostgreSQL vers 9.3 repository package
@@ -19,6 +19,7 @@ Source4:        README
 Source5:        icons.tar
 Source6:	RPM-GPG-KEY-PGDG-93
 
+Provides:       repo-gui = 1.0
 
 BuildRequires:  desktop-file-utils
 
@@ -26,6 +27,9 @@ Requires:       fedora-release
 Requires:       hicolor-icon-theme
 Requires:       system-config-repo
 Requires:       /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-93
+Requires:       /etc/yum.repos.d/pgdg-93-fedora.repo
+
+Provides:       repo-gui = 1.0
 
 
 %description

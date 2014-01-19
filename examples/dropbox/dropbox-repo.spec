@@ -16,6 +16,8 @@ Source3:        icon.png
 Source4:        README
 BuildArch:      noarch
 
+Provides:       repo-gui = 1.0
+
 BuildRequires:  desktop-file-utils
 
 Requires:       fedora-release
