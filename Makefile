@@ -43,5 +43,7 @@ examples:  PHONY
 	        --quiet -bb $$dir-*repo.spec ; \
 	    cd ..; \
 	done
+	mv examples/rpms/noarch/* examples/rpms
+	rm -r examples/rpms/noarch
 
 PHONY:
