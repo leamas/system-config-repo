@@ -1,7 +1,8 @@
+*.gz
 *.swp
 *.swo
 *.log
-*debuglog.txt
+*debug*
 rpms
 tmp
 __pycache__
