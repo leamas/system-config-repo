@@ -65,5 +65,5 @@ desktop-file-validate \
 
 
 %changelog
-* Wed Nov 27 2013 Alec Leamas <leamas.alec@gmail.com> - 0-1.1478565
+* Mon Jan 20 2014 Alec Leamas <leamas.alec@gmail.com> - 0-1.20140117gitc112d69
 - Initial release.

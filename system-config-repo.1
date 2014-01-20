@@ -21,13 +21,14 @@ repository, view the package list and inspect the signing key used
 inclusive fingerprint.
 
 .SH DATA SOURCES
-To gather more info, application checks if the <repo> file is part of a
-package. That package name is used as <package> in the following. If the
-repo file is not owned by a package, <package> defaults to <basename>-repo
-i. e., a repofile like
-.B vendor.repo
-defaults to a <package> named
-.B vendor-repo.
+To gather more info, application checks if there is a package with
+information (summary, description, icon, etc.) on the repository file.
+The first check is if the repository is owned by a package. If this
+fails, application tries to locate a package which requires the repository
+file. In any case, in order to be used a package must provide
+"repo-gui" to be used. If no package is found it defaults to "Default".
+.PP
+The  package found this way is used as <package> in the following.
 .PP
 The gui gathers data from different sources to provide info on the package.
 In priority it uses:
@@ -69,4 +70,7 @@ https://github.com/leamas/system-config-repo
 .TP
 yum.conf(5)
     Format for /etc/yum.repos.d files.
+.TP
+yum-config-manager(1)
+    CLI tool with similar scope.
 
