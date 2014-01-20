@@ -1,23 +1,29 @@
-%global commit 3b5da020685e25b2f97a3b2de4293afc78077139
+%global __python    %{__python3}
+
+%global commit      c112d697b54a596eec37f8eae3ab2a531f572627
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
+%global gitdate     20140117
 
 Name:           system-config-repo
 Version:        0
-Release:        1.%{shortcommit}%{?dist}
+Release:        1.%{gitdate}git%{shortcommit}%{?dist}
 Summary:        Administrate a single yum repository file
 
-                # Icon from iconarchive.com
 License:        MIT
 URL:            https://github.com/leamas/system-config-repo
 Group:          Development/System
 Source0:        %{url}/archive/%{commit}/%{name}-0-%{shortcommit}.tar.gz
-                # Created by tools/make_rpm, left in dist directory
+                # Created by tools/make_rpm, left in dist directory.
 Source1:        version
 BuildArch:      noarch
 
 Buildrequires:  python3-devel
 BuildRequires:  desktop-file-utils
+Requires:       gtk3
 Requires:       hicolor-icon-theme
+Requires:       python(abi) = %{python3_version}
+Requires:       python3-gobject
+Requires:       sudo
 
 
 %description
@@ -26,7 +32,7 @@ file in /etc/yum.repos.d. Using the GUI user can inspect and modify whether
 the repository is enabled and/or signed. It's also possible to see the
 underlying file.
 
-Application is primarely intended as a GUI for packaged 3rd-party
+Application is primarily intended as a GUI for packaged 3rd-party
 repositories but is designed to work in a consistent way for any
 repository file.
 
