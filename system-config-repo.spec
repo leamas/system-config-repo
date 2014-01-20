@@ -81,4 +81,11 @@ done
 - Adding missing R: redhat-lsb-core (bz #1057824).
 
 * Mon Jan 20 2014 Alec Leamas <leamas.alec@gmail.com> - 0-1.20140117gitc112d69
+- Review remarks, round 2.
+
+* Mon Jan 20 2014 Alec Leamas <leamas.alec@gmail.com> - 0-0.2.20140117git3b5da02
+-  Fixing review remarks.
+
+* Wed Nov 27 2013 Alec Leamas <leamas.alec@gmail.com> - 0-1.1478565
+>>>>>>> Specfile: Handling review remarks.
 - Initial release.
