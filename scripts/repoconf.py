@@ -60,6 +60,52 @@ def _parse_repo(repofile):
         raise ValueError(str(ex))
     return config
 
+def _get_gui_package(repofile):
+    ''' Given repofile, return gui package which owns it.
+    Three cases:
+    - The repo file is not owned by any package -> return None
+    - The repo file is owned by a package providing repo-gui ->
+          return package
+    - The repo file is owned by another package. Try to find a
+      package providing repo-gui requiring this file.
+    '''
+
+    def provides_ok(package):
+        ''' Return True if package provides 'repo-gui'. '''
+        try:
+            if not package:
+                return None
+            reply = subprocess.check_output(
+                ['rpm', '-q', '--provides', package])
+            return 'repo-gui' in reply.decode('utf-8')
+        except subprocess.CalledProcessError:
+            return False
+
+    def get_owner(path):
+        ''' Return package owning path, possiblye None. '''
+        try:
+            reply = subprocess.check_output(['rpm', '-qf', path])
+            return reply.decode('utf-8').rsplit('-', 2)[0]
+        except subprocess.CalledProcessError:
+            return None
+
+    def get_requiring_package(what):
+        ''' Return package requiring 'what', possibly None. '''
+        try:
+            reply = subprocess.check_output(
+                ['rpm', '-q', '--whatrequires', what])
+            return reply.decode('utf-8').rsplit('-', 2)[0]
+        except subprocess.CalledProcessError:
+            return None
+
+    owner = get_owner(repofile)
+    if not owner:
+        return 'Default'
+    if provides_ok(owner):
+        return owner
+    parent = get_requiring_package(repofile)
+    return parent if parent and provides_ok(parent) else 'Default'
+
 
 def _parse_commandline():
     ''' Parse commandline, return (repofile, repo_id). '''
@@ -72,20 +118,13 @@ def _parse_commandline():
         sys.stderr.write(USAGE)
         sys.exit(0)
     repofile = sys.argv[1]
+    repofile = os.path.abspath(repofile)
     if not os.access(repofile, os.R_OK):
         repofile = os.path.join('/etc/yum.repos.d', repofile)
     if not os.access(repofile, os.R_OK):
         raise OSError("Cannot open : " + repofile + "\n")
-    try:
-        reply = subprocess.check_output(['rpm', '-qf', repofile])
-        repo_id = reply.decode('utf-8').rsplit('-', 2)[0]
-    except subprocess.CalledProcessError:
-        try:
-            basename = os.path.basename(repofile).split('.', 1)[0]
-        except (ValueError, IndexError):
-            raise OSError("Bad filename: " + repofile + "\n")
-        repo_id = basename + '-repo'
-    return repofile, repo_id
+    package = _get_gui_package(repofile)
+    return repofile, package
 
 
 def _update_repofile(config, path, main_window):
@@ -184,9 +223,9 @@ class _Data(object):
     def _get_item(self, item):
         ''' Get a named item (summary, url etc.) from right source. '''
         for source in \
-            [self.repodata, self.appdata, self.pkg_info, self.defaults]:
-                if hasattr(source, item) and getattr(source, item):
-                    return getattr(source, item)
+        [self.repodata, self.appdata, self.pkg_info, self.defaults]:
+            if hasattr(source, item) and getattr(source, item):
+                return getattr(source, item)
         return None
 
     @property
@@ -208,6 +247,7 @@ class _Data(object):
     @property
     def icon(self):
         ''' Get the icon (only in repodata). '''
+        sys.stdin.read()
         key = re.sub('-repo$', '', self.repo_id)
         path = os.path.join(self._Repodata.REPOS, key, 'icon.png')
         if os.path.exists(path):
