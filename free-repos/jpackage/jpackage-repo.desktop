@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=jpackage-repo
+Version=1.0
+GenericName=jpackage repository
+Comment=If installed, enables installation of jpackage jave packages.
+Exec=/usr/bin/system-config-repo jpackage.repo
+Icon=gpk-repo
+Type=Application
+Terminal=false
+Categories=GTK;System;

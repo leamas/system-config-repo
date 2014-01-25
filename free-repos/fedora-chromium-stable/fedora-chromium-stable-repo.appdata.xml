@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Alec Leamas <leamas@nowhere.net> -->
+<application>
+   <id type="desktop">fedora-chromium-stable-repo.desktop</id>
+   <licence>CC0</licence>
+   <description>
+      <p>
+     Provides the fedora-chromium-stable 3rd-party repository. Using this it's
+     possible to install chromium builds from the stable branch.
+      </p>
+    The package uses system-config-repo to provide a graphical interface to the
+    file in /etc/yum.repos.d. Using the GUI user can inspect and modify whether
+    the repository is enabled, signed, etc. It's also possible to view the
+    underlying file.
+      <p>
+        The application uses system-config-repo to provide a
+        graphical interface to the repository.
+     </p>
+   </description>
+   <screenshots>
+       <screenshot type="default" width="928" height="522">
+https://github.com/leamas/system-config-repo/raw/master/examples/fedora-chromium-stable/screenshot.png
+       </screenshot>
+   </screenshots>
+   <url type="homepage">http://repos.fedorapeople.org/repos/spot</url>
+   <updatecontact>rpmfusion-developers@lists.rpmfusion.org</updatecontact>
+</application>

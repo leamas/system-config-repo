@@ -1,0 +1,11 @@
+[jpackage-5.0 - fedora - $releasever]
+name=JPackage 5.0 free, for Fedora $releasever
+mirrorlist = http://www.jpackage.org/mirrorlist.php?dist=generic&type=free&release=5.0
+gpgcheck = 1
+gpggkey = http://www.jpackage.org/jpackage.asc
+
+[jpackage-5.0-updates - fedora - $releasever]
+name=JPackage 5.0-updates free, for Fedora $releasever
+mirrorlist = http://www.jpackage.org/mirrorlist.php?dist=generic&type=free&release=5.0-updates
+gpgcheck = 1
+gpggkey = http://www.jpackage.org/jpackage.asc

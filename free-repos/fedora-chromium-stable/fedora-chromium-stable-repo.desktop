@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=fedora-chromium-stable-repo
+Version=1.0
+GenericName=Chromium Yum repository
+Comment=If installed, enables installation of the dropbox client software
+Exec=/usr/bin/system-config-repo fedora-chromium-stable.repo
+Icon=chromium
+Type=Application
+Terminal=false
+Categories=GTK;System;
