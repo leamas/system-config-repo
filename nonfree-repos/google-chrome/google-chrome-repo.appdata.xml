@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Alec Leamas <leamas@nowhere.net> -->
+<application>
+   <id type="desktop">google-chrome-repo.desktop</id>
+   <licence>CC0</licence>
+   <description>
+       <p>
+        The google-chrome repository makes it possible to install Google
+        software including the google-chrome browser.
+       </p>
+       <p>
+        The application uses system-config-repo to provide a
+        graphical interface to the repository.
+       </p>
+   </description>
+   <screenshots>
+       <screenshot type="default" width="786" height="432">
+https://github.com/leamas/system-config-repo/raw/master/examples/adobe/screenshot.png
+       </screenshot>
+   </screenshots>
+
+   <url type="homepage">http://www.google.com/linuxrepositories/</url>
+   <updatecontact>rpmfusion-developers@lists.rpmfusion.org</updatecontact>
+</application>

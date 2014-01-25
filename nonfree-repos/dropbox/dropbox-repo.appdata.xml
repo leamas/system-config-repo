@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Alec Leamas <leamas@nowhere.net> -->
+<application>
+   <id type="desktop">dropbox-repo.desktop</id>
+   <licence>CC0</licence>
+   <description>
+       <p>
+        This repo package makes it possible to easily download and install the
+        newest Dropbox desktop client (linux.dropbox.com/).
+       </p>
+       <p>
+        Using system-config-repo the package  provides a graphical interface
+        to the repository.
+       </p>
+   </description>
+   <screenshots>
+       <screenshot type="default" width="928" height="522">
+https://github.com/leamas/system-config-repo/raw/master/examples/dropbox/screenshot.png
+       </screenshot>
+   </screenshots>
+   <url type="homepage">https://www.dropbox.com</url>
+   <updatecontact>rpmfusion-developers@lists.rpmfusion.org</updatecontact>
+</application>

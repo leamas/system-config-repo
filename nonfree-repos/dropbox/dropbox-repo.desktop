@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=dropbox-repo
+Version=1.0
+GenericName=Dropbox Yum repository
+Comment=If installed, enables installation of the dropbox client software
+Exec=/usr/bin/system-config-repo dropbox.repo
+Icon=dropbox-logo
+Type=Application
+Terminal=false
+Categories=GTK;System;

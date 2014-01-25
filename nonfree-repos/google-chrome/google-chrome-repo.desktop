@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=dropbox-repo
+Version=1.0
+GenericName=google-chrome repository
+Comment=Enables installation of Google software, including google-chrome.
+Exec=/usr/bin/system-config-repo google-chrome.repo
+Icon=gpk-repo
+Type=Application
+Terminal=false
+Categories=GTK;System;
