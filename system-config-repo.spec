@@ -6,7 +6,7 @@
 
 Name:           system-config-repo
 Version:        0
-Release:        1.%{gitdate}git%{shortcommit}%{?dist}
+Release:        2.%{gitdate}git%{shortcommit}%{?dist}
 Summary:        Administrate a single yum repository file
 
 License:        MIT
@@ -23,6 +23,7 @@ Requires:       gtk3
 Requires:       hicolor-icon-theme
 Requires:       python(abi) = %{python3_version}
 Requires:       python3-gobject
+Requires:       redhat-lsb-core
 Requires:       sudo
 
 
@@ -71,5 +72,8 @@ desktop-file-validate \
 
 
 %changelog
+* Sat Jan 25 2014 Alec Leamas <leamas.alec@gmail.com> - 0-2.20140117gitc112d69
+- Adding missing R: redhat-lsb-core (bz #1057824).
+
 * Mon Jan 20 2014 Alec Leamas <leamas.alec@gmail.com> - 0-1.20140117gitc112d69
 - Initial release.
