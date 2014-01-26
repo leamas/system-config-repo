@@ -50,6 +50,10 @@ cp %{SOURCE1} version
 make DESTDIR=%{buildroot} install
 desktop-file-validate \
     %{buildroot}%{_datadir}/applications/system-config-repo.desktop
+for size in 256 128 64 48 32; do
+    install -pDm 644 icons/scr-repo-$size.png \
+        %{buildroot}/usr/share/icons/hicolor/${size}x${size}/apps/scr-repo.png
+done
 
 
 %post
