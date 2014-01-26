@@ -1,6 +1,6 @@
 %global __python    %{__python3}
 
-%global commit      c112d697b54a596eec37f8eae3ab2a531f572627
+%global commit      9c864dc37bf0e247a949de4d9d2999b0cd991297
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global gitdate     20140117
 
@@ -50,6 +50,10 @@ cp %{SOURCE1} version
 make DESTDIR=%{buildroot} install
 desktop-file-validate \
     %{buildroot}%{_datadir}/applications/system-config-repo.desktop
+for size in 256 128 64 48 32; do
+    install -pDm 644 icons/scr-repo-$size.png \
+        %{buildroot}/usr/share/icons/hicolor/${size}x${size}/apps/scr-repo.png
+done
 
 
 %post
@@ -67,6 +71,7 @@ desktop-file-validate \
 %{_datadir}/system-config-repo
 %{_datadir}/mime/packages/x-yum-repositories.xml
 %{_datadir}/applications/system-config-repo.desktop
+%{_datadir}/icons/hicolor/*/apps/scr-repo.png
 %{_mandir}/man1/system-config-repo*
 %attr(440,-,-) %config(noreplace) /etc/sudoers.d/system-config-repo
 
