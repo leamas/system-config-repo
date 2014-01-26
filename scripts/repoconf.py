@@ -188,16 +188,20 @@ class _Data(object):
         ''' Gnome appdata wrapper. '''
 
         def __init__(self, repo_id):
-            for attr in ['description', 'summary', 'url']:
+            for attr in ['url', 'description']:
                 setattr(self, attr, None)
             path = '/usr/share/appdata/%s.appdata.xml' % repo_id
             if not os.path.exists(path):
                 return
             tree = ET.parse(path)
-            for attr in ['description', 'summary', 'url']:
-                elem = tree.find(attr)
-                if elem:
-                    setattr(self, attr, str(elem[0].text).strip())
+            descr_elem = tree.find('./description')
+            text = ' '.join([ e.text for e in descr_elem])
+            if text:
+                self.description = text.strip()
+            url_elem = tree.find("./url[@type='homepage']")
+            if url_elem:
+                url = url_elem.text
+                self.url = url
 
     class _Repodata(object):
         ''' Wraps data in /usr/share/system-config-repo/repos dir. '''
