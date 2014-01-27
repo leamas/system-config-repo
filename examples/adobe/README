@@ -1,7 +1,0 @@
-This is a simple packaging of the Adobe  repo available at
-http://linuxdownload.adobe.com/adobe-release/adobe-release-i386-1.0-1.noarch.rpm.
-
-After a first look at the branding rules at [1] it doesn't seem OK to use any of
-the offical Adobe logos here.
-
-[1]:  http://www.adobe.com/legal/permissions/icons-web-logos.html

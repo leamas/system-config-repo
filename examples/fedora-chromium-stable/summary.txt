@@ -1,8 +1,0 @@
-Provides the dropbox 3rd-party repository. Using this it's possible to
-install the dropbox application which gives access to a cloud-based location
-which can be accessed from a multitude of devices.
-
-The package uses system-config-repo to provide a graphical interface to the
-file in /etc/yum.repos.d. Using the GUI user can inspect and modif whether
-the repository is enabled and/or signed. It's also possible to see the
-underlyng file.
