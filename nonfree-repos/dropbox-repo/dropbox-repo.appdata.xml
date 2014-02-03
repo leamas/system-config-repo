@@ -3,6 +3,9 @@
 <application>
    <id type="desktop">dropbox-repo.desktop</id>
    <licence>CC0</licence>
+   <summary>
+        Install the Dropbox client and keep it updated
+   </summary>
    <description>
        <p>
         This repo package makes it possible to easily download and install the
@@ -15,7 +18,7 @@
    </description>
    <screenshots>
        <screenshot type="default" width="928" height="522">
-https://github.com/leamas/system-config-repo/raw/master/examples/dropbox/screenshot.png
+https://github.com/leamas/system-config-repo/raw/devel/nonfree-repos/dropbox-repo/screenshot.png
        </screenshot>
    </screenshots>
    <url type="homepage">https://linux.dropbox.com</url>
