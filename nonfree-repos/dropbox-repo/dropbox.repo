@@ -1,7 +1,26 @@
-[Dropbox]
-name = Dropbox Repository
-baseurl = http://linux.dropbox.com/fedora/$releasever/
-gpgkey = http://linux.dropbox.com/fedora/rpm-public-key.asc
-enabled = 0
-gpgcheck = 1
-
+## system-config-repo (inactive)
+#
+#[Dropbox]
+#name = Dropbox Repository
+#baseurl = http://linux.dropbox.com/fedora/$releasever/
+#gpgkey = http://linux.dropbox.com/fedora/rpm-public-key.asc
+#enabled = 0
+#gpgcheck = 1
+#
+##  This is a repository template file. You can edit it manually
+##  removing all lines beginning with ## and uncomment the other
+##  lines. system-config-repo does the same when activating the
+##  repository
+##
+##  DISCLAIMER
+##  The contents here is only a pointer to Dropbox's  software
+##  repository. By using this repository you will download programs
+##  direct from Dropbox.
+##
+##  rpmfusion does not take any responsiblity for these programs.
+##
+##  If you want support or have bug reports please refer to dropbbox's
+##  channels. rpmfusion forums and bugtracker should not be used for this.
+##
+##  The source code Dropbox's applications is not available. You must thus
+##  trust the software and use it on your own risk.
