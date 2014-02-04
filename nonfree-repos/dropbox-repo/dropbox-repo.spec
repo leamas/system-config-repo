@@ -79,7 +79,7 @@ appdata-validate $opts %{buildroot}/usr/share/appdata/%{name}.appdata.xml
 
 
 %changelog
-* Mon Jan 76 2014 Alec Leamas <leamas.alec@gmail.com> - 0-2
+* Mon Jan 27 2014 Alec Leamas <leamas.alec@gmail.com> - 0-2
 - Update &&check using --nonet
 
 * Sun Jan 26 2014 Alec Leamas <leamas.alec@gmail.com> - 0-2

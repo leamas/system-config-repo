@@ -8,3 +8,4 @@ Icon=dropbox-logo
 Type=Application
 Terminal=false
 Categories=GTK;System;
+NotShowIn=MATE;
