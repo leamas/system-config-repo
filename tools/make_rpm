@@ -22,9 +22,12 @@ cp version dist
 cp version $( rpm --eval %_sourcedir )
 tools/disable-version-filter
 
+gitdate=$( date +'%y%m%d' )
 head=$( git rev-parse HEAD )
 sed -ri -e '/%global commit/s/commit.*/commit '$head/ \
-        -e '/%changelog/,/^$/ s/[0-9a-f]{7}/'"${head:0:7}/" \
+        -e '/%global gitdate/s/gitdate.*/gitdate '$gitdate/ \
+        -e '/%changelog/,/^$/ s/git[0-9a-f]{7}/git'"${head:0:7}/" \
+        -e '/%changelog/,/^$/ s/[0-9]*git/'"${gitdate}git/" \
      system-config-repo.spec
 evr=$( rpm --specfile -q --qf "%{VERSION}-%{RELEASE}" system-config-repo.spec )
 read tag tarball < <(spectool -l system-config-repo.spec)
