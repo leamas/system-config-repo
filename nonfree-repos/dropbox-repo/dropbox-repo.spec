@@ -2,7 +2,7 @@
 
 Name:           dropbox-repo
 Version:        0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        3rd-party repo package for Dropbox client
 
 License:        Public Domain
@@ -79,6 +79,13 @@ appdata-validate $opts %{buildroot}/usr/share/appdata/%{name}.appdata.xml
 
 
 %changelog
+* Tue Feb 04 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
+- Adapt to new scheme where repo file is manually activated.
+- Use NotShowIn=Mate to avoid collision with existing package.
+- Use includepkgs in repo file.
+- Add DISCLAIMER to repository file.
+- Requires yet not available update of system-config-repo.
+
 * Mon Jan 27 2014 Alec Leamas <leamas.alec@gmail.com> - 0-2
 - Update &&check using --nonet
 
