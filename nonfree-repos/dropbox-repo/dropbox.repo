@@ -1,16 +1,16 @@
 ## system-config-repo (inactive)
 #
 #[Dropbox]
-#name = Dropbox Repository
-#baseurl = http://linux.dropbox.com/fedora/$releasever/
-#gpgkey = http://linux.dropbox.com/fedora/rpm-public-key.asc
-#enabled = 0
-#gpgcheck = 1
+#name        = Dropbox Repository
+#baseurl     = http://linux.dropbox.com/fedora/$releasever/
+#gpgkey      = http://linux.dropbox.com/fedora/rpm-public-key.asc
+#enabled     = 0
+#gpgcheck    = 1
+#includepkgs = nautilus-dropbox nautilus-dropbox-debuginfo
 #
 ##  This is a repository template file. You can edit it manually
-##  removing all lines beginning with ## and uncomment the other
-##  lines. system-config-repo does the same when activating the
-##  repository
+##  by removing all lines beginning with ## and uncomment the other
+##  lines. Use 'system-config-repo dropbox.repo' to do it the GUI way.
 ##
 ##  DISCLAIMER
 ##  The contents here is only a pointer to Dropbox's  software
@@ -19,8 +19,8 @@
 ##
 ##  rpmfusion does not take any responsiblity for these programs.
 ##
-##  If you want support or have bug reports please refer to dropbbox's
+##  If you want support or have bug reports please refer to Dropbox's
 ##  channels. rpmfusion forums and bugtracker should not be used for this.
 ##
-##  The source code Dropbox's applications is not available. You must thus
-##  trust the software and use it on your own risk.
+##  The source code to some of Dropbox's applications is not available.
+##  You must thus trust this software and use it on your own risk.
