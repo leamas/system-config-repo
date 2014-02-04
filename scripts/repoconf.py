@@ -2,6 +2,7 @@
 
 
 import configparser
+import io
 import os
 import os.path
 import re
@@ -49,6 +50,20 @@ def _error_dialog(parent_window, message):
                                message)
     dialog.run()
     dialog.destroy()
+
+def _activate_dialog(parent_window, message):
+    ''' Modal dialog requesting user to confirm repo activation. '''
+    dialog = Gtk.MessageDialog(parent_window,
+                               Gtk.DialogFlags.DESTROY_WITH_PARENT
+                                   | Gtk.DialogFlags.MODAL,
+                               Gtk.MessageType.INFO,
+                               Gtk.ButtonsType.YES_NO,
+                               'Activating external repository')
+    dialog.format_secondary_text(message)
+    response = dialog.run()
+    dialog.destroy()
+    return response == Gtk.ResponseType.YES
+
 
 
 def _parse_repo(repofile):
@@ -316,6 +331,47 @@ class Handler(object):
             return True
         except subprocess.CalledProcessError:
             return False
+
+    def check_inactive(self, config, repofile):
+        ''' Check if repo is just a template, handle it if requires. '''
+
+        class DummyConfig(object):
+            ''' Provide string.write(), like configparser. '''
+
+            def __init__( self, s):
+                self.s = s
+
+            def write(self, f):
+                ''' Write self on open file f. '''
+                f.write(self.s)
+
+        if bool(len(config.sections())):
+            return config
+        with open(repofile) as f:
+            lines = f.readlines()
+        disclaimer = ''
+        copy = False
+        for l in lines:
+            if 'DISCLAIMER' in l:
+                copy = True
+            if copy:
+                disclaimer += l[2:].lstrip(' ')
+        disclaimer += '\n' + "Do you want to activate this repository?"
+        l = lines[0]
+        if not l.startswith('##') or not 'system-config-repo' in l:
+            _error_dialog(self.main_window, 'Cannot parse repository file')
+            sys.exit(1)
+        for ix, l in enumerate(lines):
+            if l.startswith('##'):
+                lines[ix] = None
+            elif l.startswith('#'):
+                lines[ix] = l[1:]
+        lines = [l for l in lines if l and l.strip()]
+        if not _activate_dialog(self.main_window, disclaimer):
+            sys.exit(1)
+        config = DummyConfig(''.join([l for l in lines if l]))
+        _update_repofile(config, repofile, self.main_window)
+        return _parse_repo(repofile)
 
     def show_some_text(self, title, text):
         '''  Show some text in a textview. '''
@@ -604,6 +660,7 @@ class Handler(object):
         self.data = _Data(self.repo_id, self.repofile, self.repo_id)
         try:
             self.config = _parse_repo(self.repofile)
+            self.config = self.check_inactive(self.config, self.repofile)
         except (configparser.Error, ValueError) as ex:
             _error_dialog(self.main_window,
                           "Cannot parse repository: " + str(ex) + "\n")
