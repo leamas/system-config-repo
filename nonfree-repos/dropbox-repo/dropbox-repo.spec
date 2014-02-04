@@ -80,6 +80,9 @@ appdata-validate $opts %{buildroot}/usr/share/appdata/%{name}.appdata.xml
 
 %changelog
 * Tue Feb 04 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
+- Fixed bad icon in dropbox-repo.desktop
+
+* Tue Feb 04 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
 - Adapt to new scheme where repo file is manually activated.
 - Use NotShowIn=Mate to avoid collision with existing package.
 - Use includepkgs in repo file.
