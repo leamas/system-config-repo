@@ -132,12 +132,12 @@ def _parse_commandline():
     if sys.argv[1] in ['-h', '--help']:
         sys.stderr.write(USAGE)
         sys.exit(0)
-    repofile = sys.argv[1]
-    repofile = os.path.abspath(repofile)
-    if not os.access(repofile, os.R_OK):
-        repofile = os.path.join('/etc/yum.repos.d', repofile)
-    if not os.access(repofile, os.R_OK):
-        raise OSError("Cannot open : " + repofile + "\n")
+    if os.access(os.path.abspath(sys.argv[1]), os.R_OK):
+        repofile = os.path.abspath(sys.argv[1])
+    elif os.access(os.path.join('/etc/yum.repos.d', sys.argv[1]), os.R_OK):
+        repofile = os.path.join('/etc/yum.repos.d', sys.argv[1])
+    else:
+        raise OSError("Cannot open : " + sys.argv[1] + "\n")
     package = _get_gui_package(repofile)
     return repofile, package
 
