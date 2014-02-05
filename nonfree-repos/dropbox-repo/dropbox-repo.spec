@@ -1,3 +1,4 @@
+# %%global does not work here, lazy evalution needed.
 %define         reponame %(b=%{name}; echo ${b%%-repo})
 
 Name:           dropbox-repo
@@ -79,6 +80,9 @@ appdata-validate $opts %{buildroot}/usr/share/appdata/%{name}.appdata.xml
 
 
 %changelog
+* Wed Feb 05 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
+- Add justification for %%define at top of file.
+
 * Tue Feb 04 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
 - Fixed bad icon in dropbox-repo.desktop
 
