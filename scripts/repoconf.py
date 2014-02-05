@@ -2,7 +2,6 @@
 
 
 import configparser
-import io
 import os
 import os.path
 import re
@@ -51,6 +50,7 @@ def _error_dialog(parent_window, message):
     dialog.run()
     dialog.destroy()
 
+
 def _activate_dialog(parent_window, message):
     ''' Modal dialog requesting user to confirm repo activation. '''
     dialog = Gtk.MessageDialog(parent_window,
@@ -65,7 +65,6 @@ def _activate_dialog(parent_window, message):
     return response == Gtk.ResponseType.YES
 
 
-
 def _parse_repo(repofile):
     ''' Return the parsed repo data. '''
     config = _RepoConfigParser()
@@ -74,6 +73,7 @@ def _parse_repo(repofile):
     except configparser.MissingSectionHeaderError as ex:
         raise ValueError(str(ex))
     return config
+
 
 def _get_gui_package(repofile):
     ''' Given repofile, return gui package which owns it.
@@ -214,7 +214,7 @@ class _Data(object):
                 self.summary = sum_elem.text.strip()
             descr_elem = tree.find('./description')
             if not descr_elem is None:
-                text = ' '.join([ e.text for e in descr_elem])
+                text = ' '.join([e.text for e in descr_elem])
                 if text:
                     self.description = text.strip()
             url_elem = tree.find("./url[@type='homepage']")
@@ -244,10 +244,11 @@ class _Data(object):
 
     def _get_item(self, item):
         ''' Get a named item (summary, url etc.) from right source. '''
+        # pylint: disable=bad-indentation
         for source in \
-        [self.repodata, self.appdata, self.pkg_info, self.defaults]:
-            if hasattr(source, item) and getattr(source, item):
-                return getattr(source, item)
+            [self.repodata, self.appdata, self.pkg_info, self.defaults]:
+                if hasattr(source, item) and getattr(source, item):
+                    return getattr(source, item)
         return None
 
     @property
@@ -338,7 +339,7 @@ class Handler(object):
         class DummyConfig(object):
             ''' Provide string.write(), like configparser. '''
 
-            def __init__( self, s):
+            def __init__(self, s):
                 self.s = s
 
             def write(self, f):
