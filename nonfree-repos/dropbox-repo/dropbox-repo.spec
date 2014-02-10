@@ -1,10 +1,8 @@
-# %%global does not work here, lazy evalution needed.
-%define         reponame %(b=%{name}; echo ${b%%-repo})
-
 Name:           dropbox-repo
 Version:        0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        3rd-party repo package for Dropbox client
+%global         reponame %(b=%{name}; echo ${b%%-repo})
 
 License:        Public Domain
 URL:            http://github.com/leamas/system-config-repo
@@ -59,6 +57,8 @@ install -pDm 644 %{SOURCE1} \
     %{buildroot}/usr/share/appdata/%{name}.appdata.xml
 install -pDm 644 %{SOURCE3} \
     %{buildroot}/usr/share/system-config-repo/repos/%{reponame}/icon.png
+sed -r -e '/^##/d' -e 's/^#[ ]*//' < %{SOURCE0} \
+    > %{buildroot}/usr/share/system-config-repo/repos/%{reponame}/dropbox.repo
 install -pDm 644 %{SOURCE2} \
     %{buildroot}/usr/share/applications/%{name}.desktop
 desktop-file-validate %{buildroot}/usr/share/applications/%{name}.desktop
@@ -67,6 +67,11 @@ desktop-file-validate %{buildroot}/usr/share/applications/%{name}.desktop
 %check
 ping -qc 1 www.redhat.com >& /dev/null || opts='--nonet'
 appdata-validate $opts %{buildroot}/usr/share/appdata/%{name}.appdata.xml
+
+
+%triggerin -- nautilus-dropbox
+cp /usr/share/system-config-repo/repos/%{reponame}/dropbox.repo \
+    /etc/yum.repos.d/%{reponame}.repo
 
 
 %files
@@ -80,6 +85,12 @@ appdata-validate $opts %{buildroot}/usr/share/appdata/%{name}.appdata.xml
 
 
 %changelog
+* Mon Feb 10 2014 Alec Leamas <leamas.alec@gmail.com> - 0-4
+- Add %%triggerin to restore repo after installing nautilus-dropbox.
+
+* Thu Feb 06 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
+- Use %%global instead of %%define.
+
 * Wed Feb 05 2014 Alec Leamas <leamas.alec@gmail.com> - 0-3
 - Add justification for %%define at top of file.
 
