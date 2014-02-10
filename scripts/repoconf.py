@@ -481,14 +481,13 @@ class Handler(object):
         def on_summary_activate_cb(widget, data=None):
             ''' User clicked on More.../Less.. link in summary. '''
             see_link_hbox = self.builder.get_object('see_link_hbox')
-            if widget.get_label().startswith('Less'):
-                widget.set_label('More...')
-                label.set_text(summary)
-                see_link_hbox.set_visible(False)
-            else:
+            see_link_hbox.set_visible(not see_link_hbox.get_visible())
+            if see_link_hbox.get_visible():
                 widget.set_label('Less...')
                 label.set_text(self.data.description)
-                see_link_hbox.set_visible(True)
+            else:
+                widget.set_label('More...')
+                label.set_text(summary)
             return True
 
         label = self.builder.get_object('summary_lbl')
