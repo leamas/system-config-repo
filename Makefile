@@ -8,6 +8,9 @@ MAN1=$(DATADIR)/man/man1
 all:
 	echo 'Only "make install" is doing something'.
 
+version:  PHONY
+	git checkout --force version
+
 install:
 	install -m 755 -d $(DESTDIR)$(DATADIR)/system-config-repo/repos
 	install -m 755 -d $(DESTDIR)$(BINDIR)
@@ -23,9 +26,15 @@ install:
 	cp -r repos/Default $(DESTDIR)$(DATADIR)/system-config-repo/repos
 	ln -s $(DATADIR)/system-config-repo/scripts/system-config-repo  \
             $(DESTDIR)$(BINDIR)/system-config-repo
-	cp -a system-config-repo.1  $(DESTDIR)$(MAN1)
-	cp -a system-config-repo.1  version $(DESTDIR)$(DATADIR)/system-config-repo
-
+	cp -a system-config-repo.1 $(DESTDIR)$(MAN1)
+	cp -a system-config-repo.1 version $(DESTDIR)$(DATADIR)/system-config-repo
+	for size in 256 128 64 48 32; do \
+	    sizeroot="$(DESTDIR)$(DATADIR)/icons/hicolor/$${size}x$${size}"; \
+	    install -pDm 644 icons/scr-repo-$$size.png \
+	        $$sizeroot/apps/scr-repo.png; \
+	    install -pDm 644 icons/scr-repo-$$size.png \
+	        $$sizeroot/mimetypes/application-x-yum-repositories.png; \
+	done
 
 pylint:
 	@PYTHONPATH=scripts python3-pylint --rcfile=pylint.conf \
